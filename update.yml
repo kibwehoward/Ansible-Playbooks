@@ -1,0 +1,33 @@
+- hosts: cloudservers
+  tasks:
+    - name: Updating repositories 
+      apt:
+        update_cache: yes
+      register: result 
+
+    - name: Upgrading all packages to their latest version
+      apt:
+        name: "*"
+        state: latest
+      register: result
+
+    - name: Servers that were updated
+      shell: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log |cut -d " " -f 3-5
+      register: result
+
+    - name: Packages that were updated
+      debug: msg="{{ result.stdout_lines }}"
+
+    - name: Clean repositories and remove unused packages
+      apt:
+        autoclean: yes
+        autoremove: yes
+
+    #- name: Reboot hosts
+    #  reboot:
+    #    msg: "Reboot initiated by Ansible"
+    #    connect_timeout: 5
+    #    reboot_timeout: 300
+    #    pre_reboot_delay: 0
+    #    post_reboot_delay: 30
+    #    test_command: uptime
