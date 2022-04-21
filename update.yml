@@ -5,29 +5,31 @@
         update_cache: yes
       register: result 
 
-    - name: Upgrading all packages to their latest version
+    - name: Upgrading "upgradable" dependencies
       apt:
         name: "*"
         state: latest
       register: result
 
-    - name: Servers that were updated
+    - name: Host(s) that were upgraded (if any) 
       shell: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log |cut -d " " -f 3-5
       register: result
 
-    - name: Packages that were updated
+    - name: Dependencies that were upgraded (if any)
       debug: msg="{{ result.stdout_lines }}"
 
-    - name: Clean repositories and remove unused packages
+    - name: Cleaning and removing unused dependencies (if any)
       apt:
         autoclean: yes
         autoremove: yes
 
-    #- name: Reboot hosts
-    #  reboot:
-    #    msg: "Reboot initiated by Ansible"
-    #    connect_timeout: 5
-    #    reboot_timeout: 300
-    #    pre_reboot_delay: 0
-    #    post_reboot_delay: 30
-    #    test_command: uptime
+    - name: Checking if host(s) need rebooting
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_md5: no
+      register: reboot_required_file
+
+    - name: Rebooting host(s) (if required)
+      ansible.builtin.reboot:
+      when: reboot_required_file.stat.exists == true
+ 
