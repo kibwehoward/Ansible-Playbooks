@@ -1,4 +1,4 @@
-- hosts: cloudservers
+- hosts: {name of server group here}
   tasks:
     - name: Updating repositories 
       apt:
