@@ -1,3 +1,3 @@
 # Ansible
 
-#### Repository for Anisible playbooks. 
+#### Repository of Anisible playbooks. 
