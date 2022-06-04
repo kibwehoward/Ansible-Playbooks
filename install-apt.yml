@@ -1,0 +1,9 @@
+- hosts: all
+  tasks:
+    - name: Install Package(s)
+      apt:
+        name:
+          - enter-sample-package-name-here
+          - enter-sample-package-name-here
+        state: latest # installs latest package version
+        cache_valid_time: 3600
