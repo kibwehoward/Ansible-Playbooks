@@ -1,4 +1,5 @@
-- hosts: {name of server group here}
+- hosts: all # or enter name of specific server group here 
+  tasks:
   tasks:
     - name: Updating repositories 
       apt:
@@ -12,7 +13,7 @@
       register: result
 
     - name: Host(s) that were upgraded (if any) 
-      shell: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log |cut -d " " -f 3-5
+      shell: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log |cut -d " " -f 3-5   # grep searches dpkg.log for a list of hosts that were upgraded
       register: result
 
     - name: Dependencies that were upgraded (if any)
