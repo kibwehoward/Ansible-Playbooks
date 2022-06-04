@@ -1,6 +1,6 @@
-- hosts: {name of server group here}
+- hosts: all # or enter name of specific server group here 
   tasks:
-    - name: Reboot hosts
+    - name: Reboot Host(s)
       reboot:
         msg: "Reboot initiated by Ansible"
         connect_timeout: 5
