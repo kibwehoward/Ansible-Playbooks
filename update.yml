@@ -1,6 +1,5 @@
 - hosts: all # or enter name of specific server group here 
   tasks:
-  tasks:
     - name: Updating repositories 
       apt:
         update_cache: yes
